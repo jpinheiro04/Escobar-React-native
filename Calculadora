@@ -1,0 +1,94 @@
+import { View, StyleSheet, Button } from "react-native";
+import { useState } from "react";
+
+export default function App() {
+  const [primeiroNumero, setPrimeiroNumero] = useState("");
+  const [operacao, setOperacao] = useState("");
+  const [display, setDisplay] = useState("0");
+
+  const apertarBotao = (valor) => {
+
+    if (valor === "C") {
+      setDisplay("0");
+      setPrimeiroNumero("");
+      setOperacao("");
+      console.log("");
+      return;
+    }
+
+    if (["+", "-", "*", "/"].includes(valor)) {
+      setPrimeiroNumero(parseFloat(display));
+      setOperacao(valor);
+      setDisplay("0");
+      console.log(`Operação: ${valor}`);
+      return;
+    }
+
+    if (valor === "=") {
+      if (operacao && primeiroNumero !== "") {
+        let resultado;
+        const segundoNumero = parseFloat(display);
+        if (operacao === "+") resultado = primeiroNumero + segundoNumero;
+        if (operacao === "-") resultado = primeiroNumero - segundoNumero;
+        if (operacao === "*") resultado = primeiroNumero * segundoNumero;
+        if (operacao === "/") resultado = primeiroNumero / segundoNumero;
+
+        console.log(`Resultado: ${resultado}`);
+        setDisplay(resultado.toString());
+        setPrimeiroNumero("");
+        setOperacao("");
+      }
+      return;
+    }
+
+    const novoValor = display === "0" ? valor : display + valor;
+    setDisplay(novoValor);
+    console.log(`Digitado: ${novoValor}`);
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <Button title="7" onPress={() => apertarBotao("7")} />
+        <Button title="8" onPress={() => apertarBotao("8")} />
+        <Button title="9" onPress={() => apertarBotao("9")} />
+        <Button title="/" onPress={() => apertarBotao("/")} />
+      </View>
+
+      <View style={styles.row}>
+        <Button title="4" onPress={() => apertarBotao("4")} />
+        <Button title="5" onPress={() => apertarBotao("5")} />
+        <Button title="6" onPress={() => apertarBotao("6")} />
+        <Button title="*" onPress={() => apertarBotao("*")} />
+      </View>
+
+      <View style={styles.row}>
+        <Button title="1" onPress={() => apertarBotao("1")} />
+        <Button title="2" onPress={() => apertarBotao("2")} />
+        <Button title="3" onPress={() => apertarBotao("3")} />
+        <Button title="-" onPress={() => apertarBotao("-")} />
+      </View>
+
+      <View style={styles.row}>
+        <Button title="0" onPress={() => apertarBotao("0")} />
+        <Button title="C" onPress={() => apertarBotao("C")} />
+        <Button title="=" onPress={() => apertarBotao("=")} />
+        <Button title="+" onPress={() => apertarBotao("+")} />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#000",
+    justifyContent: "center",
+    padding: 10
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
+});
