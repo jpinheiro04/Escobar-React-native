@@ -3,71 +3,125 @@ import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-na
 
 export default function App() {
   const [display, setDisplay] = useState("0");
-  const [result, setResult] = useState(null);
-  const [operation, setOperation] = useState(null);
+  const [primeiroNumero, setPrimeiroNumero] = useState(null);
+  const [operacao, setOperacao] = useState(null);
 
-  const handlePress = (value) => {
-    if (value === "C") {
+  const apertarBotao = (valor) => {
+    // Botão de limpar
+    if (valor === "C") {
       setDisplay("0");
-      setResult(null);
-      setOperation(null);
+      setPrimeiroNumero(null);
+      setOperacao(null);
       return;
     }
 
-    if (["+", "-", "×", "÷"].includes(value)) {
-      setOperation(value);
-      setResult(parseFloat(display));
+    // Operadores
+    if (["+", "-", "*", "/"].includes(valor)) {
+      setOperacao(valor);
+      setPrimeiroNumero(parseFloat(display));
       setDisplay("0");
       return;
     }
 
-    if (value === "=") {
-      if (operation && result !== null) {
-        let finalResult = result;
-        const current = parseFloat(display);
-        switch (operation) {
-          case "+": finalResult += current; break;
-          case "-": finalResult -= current; break;
-          case "×": finalResult *= current; break;
-          case "÷": finalResult /= current; break;
-        }
-        setDisplay(String(finalResult));
-        setResult(null);
-        setOperation(null);
+    // Igual
+    if (valor === "=") {
+      if (operacao && primeiroNumero !== null) {
+        let resultado;
+        const segundoNumero = parseFloat(display);
+        if (operacao === "+") resultado = primeiroNumero + segundoNumero;
+        if (operacao === "-") resultado = primeiroNumero - segundoNumero;
+        if (operacao === "*") resultado = primeiroNumero * segundoNumero;
+        if (operacao === "/") resultado = primeiroNumero / segundoNumero;
+
+        setDisplay(resultado.toString());
+        setPrimeiroNumero(null);
+        setOperacao(null);
       }
       return;
     }
 
-    // Números e ponto
-    setDisplay((prev) => (prev === "0" ? value : prev + value));
+    // Números
+    setDisplay((prev) => (prev === "0" ? valor : prev + valor));
   };
 
-  const Button = ({ label, color, flex }) => (
-    <TouchableOpacity
-      style={[styles.button, { backgroundColor: color || "#333", flex: flex || 1 }]}
-      onPress={() => handlePress(label)}
-    >
-      <Text style={styles.buttonText}>{label}</Text>
+  const Botao = ({ texto }) => (
+    <TouchableOpacity style={styles.botao} onPress={() => apertarBotao(texto)}>
+      <Text style={styles.textoBotao}>{texto}</Text>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Display */}
       <View style={styles.display}>
-        <Text style={styles.displayText}>{display}</Text>
+        <Text style={styles.textoDisplay}>{display}</Text>
       </View>
 
-      {/* Teclado */}
-      <View style={styles.row}>
-        <Button label="C" color="#a5a5a5" />
-        <Button label="+/-" color="#a5a5a5" />
-        <Button label="%" color="#a5a5a5" />
-        <Button label="÷" color="#ff9f0a" />
+      <View style={styles.linha}>
+        <Botao texto="7" />
+        <Botao texto="8" />
+        <Botao texto="9" />
+        <Botao texto="/" />
       </View>
-      <View style={styles.row}>
-        <Button label="7" />
-        <Button label="8" />
+      <View style={styles.linha}>
+        <Botao texto="4" />
+        <Botao texto="5" />
+        <Botao texto="6" />
+        <Botao texto="*" />
+      </View>
+      <View style={styles.linha}>
+        <Botao texto="1" />
+        <Botao texto="2" />
+        <Botao texto="3" />
+        <Botao texto="-" />
+      </View>
+      <View style={styles.linha}>
+        <Botao texto="0" />
+        <Botao texto="C" />
+        <Botao texto="=" />
+        <Botao texto="+" />
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#000",
+    justifyContent: "flex-end",
+    padding: 10,
+  },
+  display: {
+    minHeight: 100,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    padding: 10,
+    backgroundColor: "#222",
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  textoDisplay: {
+    fontSize: 40,
+    color: "#fff",
+  },
+  linha: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  botao: {
+    flex: 1,
+    margin: 5,
+    backgroundColor: "#333",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 60,
+    borderRadius: 5,
+  },
+  textoBotao: {
+    fontSize: 24,
+    color: "#fff",
+  },
+});        <Button label="8" />
         <Button label="9" />
         <Button label="×" color="#ff9f0a" />
       </View>
